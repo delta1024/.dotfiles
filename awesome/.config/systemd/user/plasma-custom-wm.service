@@ -1,0 +1,11 @@
+[Install]
+WantedBy=plasma-workspace.target
+
+[Unit]
+Description=Awesome Wm
+Befor=plasma-workspace.target
+
+[Service]
+ExecStart=/usr/bin/awesome
+Slice=session.Slice
+Restart=on-failure
