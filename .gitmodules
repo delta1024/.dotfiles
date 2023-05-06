@@ -1,0 +1,3 @@
+[submodule "awesome/.config/awesome/poppin"]
+	path = awesome/.config/awesome/poppin
+	url = https://github.com/raksooo/poppin.git
