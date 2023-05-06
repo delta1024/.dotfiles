@@ -50,12 +50,13 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(my_themes.stary_boy)
+beautiful.init(my_themes.umbrella_fish)
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -c " .. editor
+browser = "firedragon"
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -326,7 +327,10 @@ globalkeys = gears.table.join(
         { description = "lua execute prompt", group = "awesome" }),
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end,
-        { description = "show the menubar", group = "launcher" })
+        { description = "show the menubar", group = "launcher" }),
+    -- App launching
+    awful.key({ modkey, "Shift" }, "b", function() awful.spawn(browser) end,
+        { description = "launch browser", group = "launcher" })
 )
 
 clientkeys = gears.table.join(
