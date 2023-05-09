@@ -14,7 +14,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
-local my_themes = require("mythemes")
+local my_theme = require("mythemes").stary_boy
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -50,11 +50,11 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(my_themes.umbrella_fish)
+beautiful.init(my_theme)
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
-editor = os.getenv("EDITOR") or "nano"
+editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -c " .. editor
 browser = "firedragon"
 
@@ -80,16 +80,16 @@ awful.layout.layouts = {
 -- {{{ Menu
 -- Create a launcher widget and a main menu
 myawesomemenu = {
-    { "hotkeys",     function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
-    { "manual",      terminal .. " -e man awesome" },
-    { "edit config", editor_cmd .. " " .. awesome.conffile },
-    { "restart",     awesome.restart },
-    { "quit",        function() awesome.quit() end },
+    { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
+    { "manual",  terminal .. " -e man awesome" },
+    { "restart", awesome.restart },
+    { "quit",    function() awesome.quit() end },
 }
 
 mymainmenu = awful.menu({
-    items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-        { "open terminal", terminal }
+    items = { { "awesome", myawesomemenu,                      beautiful.awesome_icon },
+        { "open terminal", terminal },
+        { "shutdown",      function() awful.spawn("poweroff") end }
     }
 })
 

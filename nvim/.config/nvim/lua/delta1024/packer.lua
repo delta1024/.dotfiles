@@ -57,4 +57,12 @@ return require('packer').startup(function(use)
         end
     }
     use 'folke/tokyonight.nvim'
+    use "savq/melange-nvim"
+    -- use "humanoid-colors/vim-humanoid-colorscheme"
+    -- use {
+    --     "phha/zenburn.nvim",
+    --     config = function()
+    --         require("zenburn").setup()
+    --     end
+    -- }
 end)

@@ -7,7 +7,7 @@ if [ -f ${steam_links[0]} ]; then
     rm ${steam_links[0]}
 fi
 
-if [[ -f ${steam_links[1]} ]]; then
+if [ -f ${steam_links[1]} ]; then
     rm ${steam_links[1]}
 fi
 
