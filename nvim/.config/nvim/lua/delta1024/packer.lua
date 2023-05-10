@@ -65,4 +65,5 @@ return require('packer').startup(function(use)
     --         require("zenburn").setup()
     --     end
     -- }
+    use('theprimeagen/harpoon')
 end)
