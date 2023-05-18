@@ -28,7 +28,6 @@ lsp.on_attach(function(client, bufnr)
     local opts = { buffer = bufnr, remap = false }
     wk.register({
             K = { function() vim.lsp.buf.hover() end, "Tool tip" },
-            ["<C-h>"] = { function() vim.lsp.buf.signature_help() end, "Signature Help" },
             ['gd'] = { function() vim.lsp.buf.definition() end, "Goto definition" },
             ['[d'] = { function() vim.diagnostic.goto_next() end, "Goto next diagnostic" },
             [']d'] = { function() vim.diagnostic.goto_prev() end, "Goto prev diagnositc" },

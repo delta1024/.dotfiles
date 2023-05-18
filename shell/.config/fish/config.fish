@@ -158,3 +158,6 @@ alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 if status --is-interactive && type -q fastfetch
    fastfetch --load-config dr460nized
 end
+if test -z "$TMUX"
+    bind \ct 'tmux-sessionizer'
+end

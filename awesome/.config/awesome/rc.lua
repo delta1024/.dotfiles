@@ -14,7 +14,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
-local my_theme = require("mythemes").stary_boy
+local my_theme = require("mythemes").umbrella_fish
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -77,25 +77,26 @@ awful.layout.layouts = {
 }
 -- }}}
 
+local menus = {}
 -- {{{ Menu
 -- Create a launcher widget and a main menu
-myawesomemenu = {
+menus.myawesomemenu = {
     { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
     { "manual",  terminal .. " -e man awesome" },
     { "restart", awesome.restart },
     { "quit",    function() awesome.quit() end },
 }
 
-mymainmenu = awful.menu({
-    items = { { "awesome", myawesomemenu,                      beautiful.awesome_icon },
+menus.mymainmenu = awful.menu({
+    items = { { "awesome", menus.myawesomemenu,                      beautiful.awesome_icon },
         { "open terminal", terminal },
         { "shutdown",      function() awful.spawn("poweroff") end }
     }
 })
 
-mylauncher = awful.widget.launcher({
+menus.mylauncher = awful.widget.launcher({
     image = beautiful.awesome_icon,
-    menu = mymainmenu
+    menu = menus.mymainmenu
 })
 
 -- Menubar configuration
@@ -204,7 +205,7 @@ awful.screen.connect_for_each_screen(function(s)
         {
             -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            mylauncher,
+            menus.mylauncher,
             s.mytaglist,
             s.mypromptbox,
         },
@@ -223,7 +224,7 @@ end)
 
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
-    awful.button({}, 3, function() mymainmenu:toggle() end),
+    awful.button({}, 3, function() menus.mymainmenu:toggle() end),
     awful.button({}, 4, awful.tag.viewnext),
     awful.button({}, 5, awful.tag.viewprev)
 ))
@@ -252,7 +253,7 @@ globalkeys = gears.table.join(
         end,
         { description = "focus previous by index", group = "client" }
     ),
-    awful.key({ modkey, }, "w", function() mymainmenu:show() end,
+    awful.key({ modkey, }, "w", function() menus.mymainmenu:show() end,
         { description = "show main menu", group = "awesome" }),
 
     -- Layout manipulation
