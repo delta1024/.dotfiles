@@ -14,7 +14,12 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
-local my_theme = require("mythemes").persona
+local my_theme = {}
+if (os.date("*t").hour >= 16 or os.date("*t").hour <= 6) then
+    my_theme = require("mythemes").stary_boy
+else
+    my_theme = require("mythemes").persona
+end
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -88,7 +93,7 @@ menus.myawesomemenu = {
 }
 
 menus.mymainmenu = awful.menu({
-    items = { { "awesome", menus.myawesomemenu,                         beautiful.awesome_icon },
+    items = { { "awesome", menus.myawesomemenu,                        beautiful.awesome_icon },
         { "open terminal", terminal },
         { "suspend",       function() awful.spawn("systemctl suspend") end },
         { "shutdown",      function() awful.spawn("poweroff") end }

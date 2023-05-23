@@ -161,3 +161,7 @@ end
 if test -z "$TMUX"
     bind \ct 'tmux-sessionizer'
 end
+
+if test -n "$TMUX"
+    bind \cv 'vim .'
+end
