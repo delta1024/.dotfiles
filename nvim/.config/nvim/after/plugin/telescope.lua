@@ -7,7 +7,7 @@ wk.register({
                 builtin.find_files()
             end,
             "Find Files" },
-            s = {
+            S = {
                 function()
                     builtin.grep_string({ search = vim.fn.input("Grep > ") })
                 end,
