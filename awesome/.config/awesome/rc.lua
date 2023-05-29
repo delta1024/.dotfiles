@@ -592,4 +592,5 @@ local autorunApps =
 for _, app in ipairs(autorunApps) do
     awful.spawn.once(app)
 end
+os.execute("wal -i "..my_theme.wallpaper)
 -- }}}

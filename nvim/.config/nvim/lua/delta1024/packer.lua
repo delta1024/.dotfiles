@@ -66,4 +66,5 @@ return require('packer').startup(function(use)
     --     end
     -- }
     use('theprimeagen/harpoon')
+    use { 'AlphaTechnolog/pywal.nvim', as = 'pywal' }
 end)
