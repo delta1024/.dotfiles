@@ -14,12 +14,28 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
-local my_theme = {}
-if (os.date("*t").hour >= 16 or os.date("*t").hour <= 6) then
-    my_theme = require("mythemes").stary_boy
-else
-    my_theme = require("mythemes").persona
+local startup_time = os.date("*t")
+local function get_theme ()
+    local themes =  require("mythemes")
+    local now = os.date("*t")
+    if (now.hour >= 16 or now.hour <= 5) then
+        return themes.stary_boy
+    else
+        return themes.persona
 end
+end
+local my_theme = get_theme()
+gears.timer {
+    timeout = (60 * 30),
+    call_now = false,
+    autostart = true,
+    callback = function ()
+        local now = os.date("*t")
+        if now.hour > startup_time.hour and now.hour > 16 then
+            awesome.restart()
+        end
+    end
+}
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -337,7 +353,11 @@ globalkeys = gears.table.join(
         { description = "show the menubar", group = "launcher" }),
     -- App launching
     awful.key({ modkey, "Shift" }, "b", function() awful.spawn(browser) end,
-        { description = "launch browser", group = "launcher" })
+        { description = "launch browser", group = "launcher" }),
+        awful.key({modkey}, "e", function ()
+            awful.spawn("emacs")
+        end, {description = "launch emacs", group = "launcher"})
+
 )
 
 clientkeys = gears.table.join(

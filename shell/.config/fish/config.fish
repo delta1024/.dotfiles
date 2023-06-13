@@ -165,3 +165,6 @@ end
 if test -n "$TMUX"
     bind \cv 'vim .'
 end
+
+# opam configuration
+source /home/jake/.opam/opam-init/init.fish > /dev/null 2> /dev/null; or true

@@ -1,0 +1,78 @@
+#+TITLE: Emacs Config
+#+AUTHOR: Jacob Stannix
+* Table of Contents                                                     :toc:
+-  [[#elpaca-package-manager][Elpaca Package Manager]]
+- [[#packages][Packages]]
+  - [[#keys][Keys]]
+- [[#org-mode][Org Mode]]
+- [[#misc-settings][Misc Settings]]
+  - [[#line-numbers][Line Numbers]]
+  - [[#menubar-and-scrollbar][Menubar and scrollbar]]
+
+
+* Setup
+** package.el
+To install a package use ~(add-to-list 'package-selected-packages 'package-symbol)~
+#+begin_src elisp
+  (require 'package)		
+#+end_src
+** TODO custom.el
+* Packages to install
+** Org-toc
+Install table of contents for org documents.
+#+begin_src elisp
+(add-to-list 'package-selected-packages 'toc-org)  
+#+end_src
+** Org Superstar
+#+begin_src elisp
+  (add-to-list 'package-selected-packages 'org-superstar)
+#+end_src
+** Which key
+#+begin_src elisp
+  (add-to-iist 'package-selected-packages 'which-key)
+#+end_src
+** Verteco
+#+begin_src elisp
+    (add-to-iist 'package-selected-packages 'vertico)
+#+end_src
+** Orderless
+#+begin_src elisp
+  (add-to-list 'package-selected-packeges 'orderless)
+#+end_src
+** TODO Eglot
+** Install all selected packages
+#+begin_src emacs-lisp
+  (package-install-selected-packages :noconfirm)
+#+end_src
+* TODO Org-mode Settings
+** Org Superstar
+#+begin_src elisp
+  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+#+end_src
+* Misc Settings
+** Electric pair mode
+Audo close parens, braces, quotes, etc...
+#+begin_src elisp
+  (electric-pair-mode 't)
+#+end_src 
+** Line Numbers
+#+begin_src elisp
+ (setq display-line-numbers 'relative)
+#+end_src
+** Menubar and scrollbar
+Remove menu bar and scroll bar (who needs a mouse anyway)
+#+begin_src elisp
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+#+end_src
+** Which Key
+#+begin_src elisp
+  (require 'which-key)
+  (which-key-mode)
+#+end_src
+** TODO Vertico
+** TODO Orderless
+** TODO Eglot
+** TODO Savehist Mode
+
