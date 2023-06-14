@@ -1,54 +1,66 @@
 #+TITLE: Emacs Config
 #+AUTHOR: Jacob Stannix
 * Table of Contents                                                     :toc:
--  [[#elpaca-package-manager][Elpaca Package Manager]]
-- [[#packages][Packages]]
-  - [[#keys][Keys]]
-- [[#org-mode][Org Mode]]
+- [[#setup][Setup]]
+  - [[#packageel][package.el]]
+  - [[#customel][custom.el]]
+- [[#packages-to-install][Packages to install]]
+  - [[#install-all-selected-packages][Install all selected packages]]
+- [[#org-mode-settings][Org-mode Settings]]
+  - [[#org-superstar][Org Superstar]]
+  - [[#org-toc][org toc]]
 - [[#misc-settings][Misc Settings]]
+  - [[#electric-pair-mode][Electric pair mode]]
   - [[#line-numbers][Line Numbers]]
   - [[#menubar-and-scrollbar][Menubar and scrollbar]]
-
+  - [[#which-key][Which Key]]
+  - [[#vertico][Vertico]]
+  - [[#orderless][Orderless]]
+  - [[#savehist-mode][Savehist Mode]]
+  - [[#tuareg-mode][Tuareg mode]]
+  -  [[#autorevert-mode][Autorevert mode]]
+  - [[#theme][theme]]
 
 * Setup
 ** package.el
 To install a package use ~(add-to-list 'package-selected-packages 'package-symbol)~
 #+begin_src elisp
+  (setq user-emacs-directory (expand-file-name "emacs" "~/.config"))
   (require 'package)		
 #+end_src
-** TODO custom.el
+** custom.el
+#+begin_src elisp
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (load custom-file)
+#+end_src
 * Packages to install
-** Org-toc
-Install table of contents for org documents.
 #+begin_src elisp
-(add-to-list 'package-selected-packages 'toc-org)  
-#+end_src
-** Org Superstar
-#+begin_src elisp
+  (add-to-list 'package-selected-packages 'toc-org)  
   (add-to-list 'package-selected-packages 'org-superstar)
+  (add-to-list 'package-selected-packages 'which-key)
+  (add-to-list 'package-selected-packages 'vertico)
+  (add-to-list 'package-selected-packages 'orderless)
+  (add-to-list 'package-selected-packages 'eglot)
+  (add-to-list 'package-selected-packages 'lua-mode)
+  (add-to-list 'package-selected-packages 'magit)
+  ;;  (add-to-list 'package-selected-packages 'tuareg) ;; For ocaml
 #+end_src
-** Which key
-#+begin_src elisp
-  (add-to-iist 'package-selected-packages 'which-key)
-#+end_src
-** Verteco
-#+begin_src elisp
-    (add-to-iist 'package-selected-packages 'vertico)
-#+end_src
-** Orderless
-#+begin_src elisp
-  (add-to-list 'package-selected-packeges 'orderless)
-#+end_src
-** TODO Eglot
+
 ** Install all selected packages
 #+begin_src emacs-lisp
   (package-install-selected-packages :noconfirm)
 #+end_src
+
 * TODO Org-mode Settings
 ** Org Superstar
 #+begin_src elisp
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 #+end_src
+** org toc
+#+begin_src elisp
+  (add-hook 'org-mode-hook (lambda () (toc-org-mode 1)))
+#+end_src
+
 * Misc Settings
 ** Electric pair mode
 Audo close parens, braces, quotes, etc...
@@ -71,8 +83,32 @@ Remove menu bar and scroll bar (who needs a mouse anyway)
   (require 'which-key)
   (which-key-mode)
 #+end_src
-** TODO Vertico
-** TODO Orderless
-** TODO Eglot
-** TODO Savehist Mode
+** Vertico
+#+begin_src elisp
+  (vertico-mode)
+#+end_src
+** Orderless
+#+begin_src elisp
+    (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion))))
+#+end_src
 
+** Savehist Mode
+#+begin_src elisp
+  (savehist-mode)
+#+end_src
+
+** Tuareg mode
+Add opam load path to emacs
+#+begin_src elisp :tangle no
+  (add-to-list 'exec-path (getenv "HOME") "/.opam/default/bin"))
+#+end_src
+**  Autorevert mode
+  #+begin_src elisp
+  (global-auto-revert-mode 1)
+#+end_src
+** theme
+#+begin_src elisp
+  (load-theme 'tango-dark 't)
+#+end_src
