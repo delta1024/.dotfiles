@@ -31,7 +31,7 @@ gears.timer {
     autostart = true,
     callback = function ()
         local now = os.date("*t")
-        if now.hour > startup_time.hour and now.hour > 16 then
+        if now.hour > startup_time.hour and startup_time.hour < 16 and now.hour > 16 then
             awesome.restart()
         end
     end
@@ -530,7 +530,10 @@ awful.rules.rules = {
         },
         properties = { titlebars_enabled = true }
     },
-
+    {
+       rule = { class = "Emacs" },
+       properties = { size_hints_honor = false }
+    },
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },

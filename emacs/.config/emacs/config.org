@@ -4,22 +4,30 @@
 - [[#setup][Setup]]
   - [[#packageel][package.el]]
   - [[#customel][custom.el]]
+  - [[#startup-screen][startup screen]]
+  - [[#transparent-emacs-frames][transparent emacs frames]]
 - [[#packages-to-install][Packages to install]]
   - [[#install-all-selected-packages][Install all selected packages]]
 - [[#org-mode-settings][Org-mode Settings]]
   - [[#org-superstar][Org Superstar]]
   - [[#org-toc][org toc]]
+  - [[#org-agenda][Org Agenda]]
+  - [[#capture-templates][Capture Templates]]
 - [[#misc-settings][Misc Settings]]
   - [[#electric-pair-mode][Electric pair mode]]
   - [[#line-numbers][Line Numbers]]
   - [[#menubar-and-scrollbar][Menubar and scrollbar]]
+  - [[#company][Company]]
   - [[#which-key][Which Key]]
   - [[#vertico][Vertico]]
   - [[#orderless][Orderless]]
   - [[#savehist-mode][Savehist Mode]]
   - [[#tuareg-mode][Tuareg mode]]
-  -  [[#autorevert-mode][Autorevert mode]]
+  - [[#autorevert-mode][Autorevert mode]]
   - [[#theme][theme]]
+  - [[#doom-modeline][Doom modeline]]
+  - [[#treesitter][Treesitter]]
+- [[#keymaps][Keymaps]]
 
 * Setup
 ** package.el
@@ -33,7 +41,22 @@ To install a package use ~(add-to-list 'package-selected-packages 'package-symbo
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
   (load custom-file)
 #+end_src
+** startup screen
+#+begin_src elisp
+  (setq inhibit-splash-screen 't)
+#+end_src
+** transparent emacs frames
+#+begin_src elisp
+  (set-frame-parameter (selected-frame) 'alpha '(90 . 50))
+  (add-to-list 'default-frame-alist '(alpha . (90 . 50)))
+#+end_src
 * Packages to install
+Add melpa to archives
+#+begin_src elisp
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (package-initialize)
+#+end_src
+Add packages to list
 #+begin_src elisp
   (add-to-list 'package-selected-packages 'toc-org)  
   (add-to-list 'package-selected-packages 'org-superstar)
@@ -42,12 +65,23 @@ To install a package use ~(add-to-list 'package-selected-packages 'package-symbo
   (add-to-list 'package-selected-packages 'orderless)
   (add-to-list 'package-selected-packages 'eglot)
   (add-to-list 'package-selected-packages 'lua-mode)
+  (add-to-list 'package-selected-packages 'zig-mode)
   (add-to-list 'package-selected-packages 'magit)
-  ;;  (add-to-list 'package-selected-packages 'tuareg) ;; For ocaml
+  (add-to-list 'package-selected-packages 'company)
+  (add-to-list 'package-selected-packages 'tree-sitter)
+  (add-to-list 'package-selected-packages 'tree-sitter-langs)
+  (add-to-list 'package-selected-packages 'doom-modeline)
+  (add-to-list 'package-selected-packages 'doom-themes)
+  (add-to-list 'package-selected-packages 'nerd-icons)
+  (add-to-list 'package-selected-packages 'merlin-iedit)
+  (add-to-list 'package-selected-packages 'merlin-company)
+  (add-to-list 'package-selected-packages 'merlin-ac)
+
 #+end_src
 
 ** Install all selected packages
 #+begin_src emacs-lisp
+  ;; (package-refresh-contents)
   (package-install-selected-packages :noconfirm)
 #+end_src
 
@@ -60,7 +94,17 @@ To install a package use ~(add-to-list 'package-selected-packages 'package-symbo
 #+begin_src elisp
   (add-hook 'org-mode-hook (lambda () (toc-org-mode 1)))
 #+end_src
-
+** Org Agenda
+#+begin_src elisp
+  (customize-set-variable 'org-directory "~/Org")
+  (customize-set-variable 'org-agenda-files  '("~/Org/agenda/"))
+#+end_src
+** Capture Templates
+#+begin_src elisp
+  (customize-set-variable org-capture-templates
+			  '(("w" "Add Shift" entry (file "agenda/Work.org")
+			     "* Shift \nSCHEDULED: %^{Hours}T")))
+#+end_src
 * Misc Settings
 ** Electric pair mode
 Audo close parens, braces, quotes, etc...
@@ -78,6 +122,11 @@ Remove menu bar and scroll bar (who needs a mouse anyway)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
 #+end_src
+** Company
+#+begin_src elisp
+  (add-hook 'after-init-hook 'global-company-mode)
+
+#+end_src
 ** Which Key
 #+begin_src elisp
   (require 'which-key)
@@ -89,9 +138,9 @@ Remove menu bar and scroll bar (who needs a mouse anyway)
 #+end_src
 ** Orderless
 #+begin_src elisp
-    (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion))))
+  (setq completion-styles '(orderless basic)
+	completion-category-defaults nil
+	completion-category-overrides '((file (styles partial-completion))))
 #+end_src
 
 ** Savehist Mode
@@ -101,14 +150,34 @@ Remove menu bar and scroll bar (who needs a mouse anyway)
 
 ** Tuareg mode
 Add opam load path to emacs
-#+begin_src elisp :tangle no
-  (add-to-list 'exec-path (getenv "HOME") "/.opam/default/bin"))
+#+begin_src elisp
+  (let ((opam-share (car (process-lines "opam" "var" "share")))
+	(opam-bin (car (process-lines "opam" "var" "bin"))))
+    (add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
+    (setq merlin-command (concat opam-bin "/ocamlmerlin"))
+    (autoload 'merlin-mode "merlin" "Merlin mode" t)
+    (add-hook 'tuareg-mode-hook #'merlin-mode))
+  (require 'merlin-iedit)
+  (require 'merlin-company)
+  (require 'merlin-ac)
 #+end_src
-**  Autorevert mode
+** Autorevert mode
   #+begin_src elisp
-  (global-auto-revert-mode 1)
+    (global-auto-revert-mode 1)
 #+end_src
 ** theme
 #+begin_src elisp
-  (load-theme 'tango-dark 't)
+  (load-theme 'doom-one 't)
 #+end_src
+** Doom modeline
+#+begin_src elisp
+  (require 'doom-modeline)
+  (doom-modeline-mode 1)
+#+end_src
+** Treesitter
+#+begin_src elisp
+  (require 'tree-sitter)
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+#+end_src
+* TODO Keymaps
