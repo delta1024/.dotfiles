@@ -1,11 +1,11 @@
-#+TITLE: Emacs Config
+#+TITLE: My Emacs Config
 #+AUTHOR: Jacob Stannix
-* Table of Contents                                                     :toc:
+* Table of Contents  :toc:
 - [[#setup][Setup]]
-  - [[#packageel][package.el]]
   - [[#customel][custom.el]]
   - [[#startup-screen][startup screen]]
   - [[#transparent-emacs-frames][transparent emacs frames]]
+  - [[#packageel][package.el]]
 - [[#packages-to-install][Packages to install]]
   - [[#install-all-selected-packages][Install all selected packages]]
 - [[#org-mode-settings][Org-mode Settings]]
@@ -27,14 +27,13 @@
   - [[#theme][theme]]
   - [[#doom-modeline][Doom modeline]]
   - [[#treesitter][Treesitter]]
+- [[#eglot][Eglot]]
 - [[#keymaps][Keymaps]]
 
 * Setup
-** package.el
-To install a package use ~(add-to-list 'package-selected-packages 'package-symbol)~
+This may be pointless but I'm going to do it anyway.
 #+begin_src elisp
   (setq user-emacs-directory (expand-file-name "emacs" "~/.config"))
-  (require 'package)		
 #+end_src
 ** custom.el
 #+begin_src elisp
@@ -50,12 +49,20 @@ To install a package use ~(add-to-list 'package-selected-packages 'package-symbo
   (set-frame-parameter (selected-frame) 'alpha '(90 . 50))
   (add-to-list 'default-frame-alist '(alpha . (90 . 50)))
 #+end_src
+** package.el
+
 * Packages to install
+To install a package use ~(add-to-list 'package-selected-packages 'package-symbol)~
+#+begin_src elisp
+  (require 'package)		
+#+end_src
+
 Add melpa to archives
 #+begin_src elisp
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (package-initialize)
 #+end_src
+
 Add packages to list
 #+begin_src elisp
   (add-to-list 'package-selected-packages 'toc-org)  
@@ -101,9 +108,11 @@ Add packages to list
 #+end_src
 ** Capture Templates
 #+begin_src elisp
-  (customize-set-variable org-capture-templates
-			  '(("w" "Add Shift" entry (file "agenda/Work.org")
-			     "* Shift \nSCHEDULED: %^{Hours}T")))
+  (setq  org-capture-templates
+	 '(("w" "Add Shift" entry (file "agenda/Work.org")
+	    "* Shift \nSCHEDULED: %^{Hours}T")
+	   ("t" "Add Task" entry (file "agenda/Tasks.org")
+	    "* TODO %?")))
 #+end_src
 * Misc Settings
 ** Electric pair mode
@@ -113,7 +122,7 @@ Audo close parens, braces, quotes, etc...
 #+end_src 
 ** Line Numbers
 #+begin_src elisp
- (setq display-line-numbers 'relative)
+ (customize-set-variable display-line-numbers 'relative)
 #+end_src
 ** Menubar and scrollbar
 Remove menu bar and scroll bar (who needs a mouse anyway)
@@ -125,7 +134,6 @@ Remove menu bar and scroll bar (who needs a mouse anyway)
 ** Company
 #+begin_src elisp
   (add-hook 'after-init-hook 'global-company-mode)
-
 #+end_src
 ** Which Key
 #+begin_src elisp
@@ -138,9 +146,9 @@ Remove menu bar and scroll bar (who needs a mouse anyway)
 #+end_src
 ** Orderless
 #+begin_src elisp
-  (setq completion-styles '(orderless basic)
-	completion-category-defaults nil
-	completion-category-overrides '((file (styles partial-completion))))
+  (customize-set-variable completion-styles '(orderless basic))
+  (customize-set-variable completion-category-overrides '((file (styles partial-completion))))
+  (setq completion-category-defaults nil)
 #+end_src
 
 ** Savehist Mode
@@ -162,8 +170,8 @@ Add opam load path to emacs
   (require 'merlin-ac)
 #+end_src
 ** Autorevert mode
-  #+begin_src elisp
-    (global-auto-revert-mode 1)
+#+begin_src elisp
+  (global-auto-revert-mode 1)
 #+end_src
 ** theme
 #+begin_src elisp
@@ -180,4 +188,12 @@ Add opam load path to emacs
   (require 'tree-sitter-langs)
   (global-tree-sitter-mode)
 #+end_src
+* TODO Eglot
 * TODO Keymaps
+#+begin_src elisp 
+  (define-prefix-command 'my/leader-key)
+  (global-set-key (kbd "C-c C-g") #'my/leader-key)
+  
+  (define-key my/leader-key "a" #'org-agenda)
+  (define-key my/leader-key "c" #'org-capture)
+#+end_src
