@@ -5,7 +5,6 @@
   - [[#customel][custom.el]]
   - [[#startup-screen][startup screen]]
   - [[#transparent-emacs-frames][transparent emacs frames]]
-  - [[#packageel][package.el]]
 - [[#packages-to-install][Packages to install]]
   - [[#install-all-selected-packages][Install all selected packages]]
 - [[#org-mode-settings][Org-mode Settings]]
@@ -49,7 +48,6 @@ This may be pointless but I'm going to do it anyway.
   (set-frame-parameter (selected-frame) 'alpha '(90 . 50))
   (add-to-list 'default-frame-alist '(alpha . (90 . 50)))
 #+end_src
-** package.el
 
 * Packages to install
 To install a package use ~(add-to-list 'package-selected-packages 'package-symbol)~
@@ -146,9 +144,10 @@ Remove menu bar and scroll bar (who needs a mouse anyway)
 #+end_src
 ** Orderless
 #+begin_src elisp
-  (customize-set-variable completion-styles '(orderless basic))
-  (customize-set-variable completion-category-overrides '((file (styles partial-completion))))
-  (setq completion-category-defaults nil)
+  (setq  completion-styles '(orderless basic)
+	 completion-category-defaults nil
+	 completion-category-overrides '((file (styles partial-completion))))
+
 #+end_src
 
 ** Savehist Mode
