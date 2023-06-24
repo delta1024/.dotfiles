@@ -4,7 +4,7 @@
 - [[#setup][Setup]]
   - [[#customel][custom.el]]
   - [[#startup-screen][startup screen]]
-  - [[#transparent-emacs-frames][transparent emacs frames]]
+  - [[#transparent-emacs-frames-and-font][transparent emacs frames and font]]
 - [[#packages-to-install][Packages to install]]
   - [[#install-all-selected-packages][Install all selected packages]]
 - [[#org-mode-settings][Org-mode Settings]]
@@ -33,6 +33,7 @@
 This may be pointless but I'm going to do it anyway.
 #+begin_src elisp
   (setq user-emacs-directory (expand-file-name "emacs" "~/.config"))
+  (add-to-list 'load-path (expand-file-name "lisp" "~/.config/emacs"))
 #+end_src
 ** custom.el
 #+begin_src elisp
@@ -43,10 +44,16 @@ This may be pointless but I'm going to do it anyway.
 #+begin_src elisp
   (setq inhibit-splash-screen 't)
 #+end_src
-** transparent emacs frames
+** transparent emacs frames and font
 #+begin_src elisp
+
+
+  (dolist (param '('(alpha . (90 . 50))
+		   '(font . "FiraCode Nerd Font-12")))
+    (add-to-list 'default-frame-alist param))
   (set-frame-parameter (selected-frame) 'alpha '(90 . 50))
-  (add-to-list 'default-frame-alist '(alpha . (90 . 50)))
+  (set-frame-parameter (selected-frame) 'font "FiraCode Nerd Font-11")
+
 #+end_src
 
 * Packages to install
@@ -94,6 +101,7 @@ Add packages to list
 ** Org Superstar
 #+begin_src elisp
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+  (customize-set-variable 'org-hide-leading-stars 't)
 #+end_src
 ** org toc
 #+begin_src elisp
@@ -106,7 +114,7 @@ Add packages to list
 #+end_src
 ** Capture Templates
 #+begin_src elisp
-  (setq  org-capture-templates
+  (customize-set-variable  'org-capture-templates
 	 '(("w" "Add Shift" entry (file "agenda/Work.org")
 	    "* Shift \nSCHEDULED: %^{Hours}T")
 	   ("t" "Add Task" entry (file "agenda/Tasks.org")
@@ -161,6 +169,7 @@ Add opam load path to emacs
   (let ((opam-share (car (process-lines "opam" "var" "share")))
 	(opam-bin (car (process-lines "opam" "var" "bin"))))
     (add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
+    (add-to-list 'exec-path opam-share)
     (setq merlin-command (concat opam-bin "/ocamlmerlin"))
     (autoload 'merlin-mode "merlin" "Merlin mode" t)
     (add-hook 'tuareg-mode-hook #'merlin-mode))

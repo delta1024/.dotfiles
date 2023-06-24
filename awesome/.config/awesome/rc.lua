@@ -354,10 +354,10 @@ globalkeys = gears.table.join(
     -- App launching
     awful.key({ modkey, "Shift" }, "b", function() awful.spawn(browser) end,
         { description = "launch browser", group = "launcher" }),
-        awful.key({modkey}, "e", function ()
-            awful.spawn("emacs")
-        end, {description = "launch emacs", group = "launcher"})
-
+    awful.key({modkey}, "e", function ()
+	  awful.spawn("emacs")
+    end, {description = "launch emacs", group = "launcher"})
+    
 )
 
 clientkeys = gears.table.join(

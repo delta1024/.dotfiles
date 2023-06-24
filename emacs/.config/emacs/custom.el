@@ -7,7 +7,8 @@
    '("02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" default))
  '(display-line-numbers 'relative)
  '(ede-project-directories '("/home/jake/Code/c/lox"))
- '(org-agenda-files '("/home/jake/Org/agenda/Agenda.org"))
+ '(package-selected-packages
+   '(dune merlin-ac merlin-company merlin-iedit nerd-icons doom-themes doom-modeline tree-sitter-langs tree-sitter company magit zig-mode lua-mode eglot orderless vertico which-key org-superstar toc-org))
  '(safe-local-variable-values '((vc-follow-symlinks quote t))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
