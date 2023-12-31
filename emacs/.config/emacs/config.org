@@ -4,7 +4,9 @@
 - [[#setup][Setup]]
   - [[#customel][custom.el]]
   - [[#startup-screen][startup screen]]
+  - [[#remap-zap-to-char][Remap zap-to-char]]
   - [[#transparent-emacs-frames-and-font][transparent emacs frames and font]]
+  - [[#abbrevs][Abbrevs]]
 - [[#packages-to-install][Packages to install]]
   - [[#install-all-selected-packages][Install all selected packages]]
 - [[#org-mode-settings][Org-mode Settings]]
@@ -23,26 +25,37 @@
   - [[#savehist-mode][Savehist Mode]]
   - [[#tuareg-mode][Tuareg mode]]
   - [[#autorevert-mode][Autorevert mode]]
+  - [[#rainbow-deilmeters][Rainbow Deilmeters]]
   - [[#theme][theme]]
   - [[#doom-modeline][Doom modeline]]
   - [[#treesitter][Treesitter]]
+  - [[#fzf][fzf]]
 - [[#eglot][Eglot]]
+- [[#dap-mode][Dap Mode]]
 - [[#keymaps][Keymaps]]
+- [[#sessionizer][Sessionizer]]
 
 * Setup
 This may be pointless but I'm going to do it anyway.
 #+begin_src elisp
   (setq user-emacs-directory (expand-file-name "emacs" "~/.config"))
   (add-to-list 'load-path (expand-file-name "lisp" "~/.config/emacs"))
+  
+  (customize-set-variable 'cursor-type 'bar)
 #+end_src
 ** custom.el
-#+begin_src elisp
+n#+begin_src elisp
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
   (load custom-file)
 #+end_src
 ** startup screen
 #+begin_src elisp
   (setq inhibit-splash-screen 't)
+#+end_src
+** Remap zap-to-char
+#+begin_src elisp
+  (define-key global-map [remap zap-to-char] 'zap-up-to-char)
+  (define-key global-map (kbd "C-M-z") #'zap-to-char)
 #+end_src
 ** transparent emacs frames and font
 #+begin_src elisp
@@ -51,9 +64,18 @@ This may be pointless but I'm going to do it anyway.
   (dolist (param '('(alpha . (90 . 50))
 		   '(font . "FiraCode Nerd Font-12")))
     (add-to-list 'default-frame-alist param))
-  (set-frame-parameter (selected-frame) 'alpha '(90 . 50))
-  (set-frame-parameter (selected-frame) 'font "FiraCode Nerd Font-11")
 
+	  (set-frame-parameter (selected-frame) 'alpha '(90 . 50))
+  (set-frame-parameter (selected-frame) 'font "FiraCode Nerd Font-11")
+  (add-hook 'server-after-make-frame-hook #'(lambda ()
+    (set-frame-parameter (selected-frame) 'alpha '(90 . 50))
+    (set-frame-parameter (selected-frame) 'font "FiraCode Nerd Font-11")))
+
+#+end_src
+** Abbrevs
+#+begin_src emacs-lisp
+  (customize-set-variable 'save-abbrevs 'silently)
+  (setq-default abbrev-mode t)
 #+end_src
 
 * Packages to install
@@ -85,19 +107,26 @@ Add packages to list
   (add-to-list 'package-selected-packages 'doom-modeline)
   (add-to-list 'package-selected-packages 'doom-themes)
   (add-to-list 'package-selected-packages 'nerd-icons)
+  (add-to-list 'package-selected-packages 'rainbow-delimiters)
   (add-to-list 'package-selected-packages 'merlin-iedit)
   (add-to-list 'package-selected-packages 'merlin-company)
   (add-to-list 'package-selected-packages 'merlin-ac)
+  (add-to-list 'package-selected-packages 'rust-mode)
+  (add-to-list 'package-selected-packages 'fzf)
+  (add-to-list 'package-selected-packages 'dap-mode)
 
 #+end_src
 
 ** Install all selected packages
 #+begin_src emacs-lisp
   ;; (package-refresh-contents)
-  (package-install-selected-packages :noconfirm)
+  (package-install-selected-packages :noconfirm) ;
 #+end_src
 
 * TODO Org-mode Settings
+#+begin_src emacs-lisp
+  (customize-set-variable 'org-hide-emphasis-markers 't)
+#+end_src
 ** Org Superstar
 #+begin_src elisp
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
@@ -128,7 +157,7 @@ Audo close parens, braces, quotes, etc...
 #+end_src 
 ** Line Numbers
 #+begin_src elisp
- (customize-set-variable display-line-numbers 'relative)
+ (customize-set-variable 'display-line-numbers 'relative)
 #+end_src
 ** Menubar and scrollbar
 Remove menu bar and scroll bar (who needs a mouse anyway)
@@ -181,6 +210,9 @@ Add opam load path to emacs
 #+begin_src elisp
   (global-auto-revert-mode 1)
 #+end_src
+** Rainbow Deilmeters
+#+begin_src emacs-lisp
+#+end_src
 ** theme
 #+begin_src elisp
   (load-theme 'doom-one 't)
@@ -196,12 +228,55 @@ Add opam load path to emacs
   (require 'tree-sitter-langs)
   (global-tree-sitter-mode)
 #+end_src
+** fzf
+#+begin_src emacs-lisp :tangle no
+  (define-key global-map [remap find-file] 'fzf-find-file)
+#+end_src
+
 * TODO Eglot
+#+begin_src emacs-lisp
+    (add-hook 'rust-mode-hook #'eglot-ensure)
+    (add-hook 'c-mode-hook #'eglot-ensure)
+    (add-hook 'zig-mode-hook #'eglot-ensure)
+    (define-prefix-command 'eglot-prefix)
+    (define-key eglot-prefix "r" #'eglot-rename)
+    (define-key eglot-prefix "a" #'eglot-code-actions)
+    (define-key eglot-prefix "f" #'eglot-format)
+    (add-hook 'eglot-managed-mode-hook #'(lambda ()
+					   (local-set-key (kbd "C-c l") #'eglot-prefix)))
+    (add-hook 'eglot-managed-mode-hook #'rainbow-delimiters-mode)
+    (add-hook 'eglot-managed-mode-hook #'(lambda ()
+					   (dap-mode 1)))
+#+end_src
+
+* Dap Mode
+#+begin_src elisp
+  (setq dap-auto-configure-features '(sessions ilcals controls tooltip))
+  (require 'dap-cpptools)
+#+end_src
 * TODO Keymaps
 #+begin_src elisp 
   (define-prefix-command 'my/leader-key)
   (global-set-key (kbd "C-c C-g") #'my/leader-key)
-  
   (define-key my/leader-key "a" #'org-agenda)
   (define-key my/leader-key "c" #'org-capture)
+
+  (define-prefix-command 'transpose-prefix)
+  (global-set-key (kbd "C-c t") #'transpose-prefix)
+  (define-key transpose-prefix "r" #'transpose-regions)
+  (define-key transpose-prefix "x" #'transpose-sexps)
+  (define-key transpose-prefix "s" #'transpose-sentences)
+  (define-key transpose-prefix "p" #'transpose-paragraphs)
+  (define-key transpose-prefix "R" #'replace-rectangle)
+#+end_src
+* Sessionizer
+#+begin_src emacs-lisp
+      (customize-set-variable 'emacs-sessionizer-prefix-key (kbd "C-c s"))
+      (customize-set-variable 'persp-mode-prefix-key (kbd "C-c p"))
+      (customize-set-variable 'emacs-sessionizer-search-list '("~/.config/"
+							       "~/Code"
+							       "~/Code/rust"
+							       "~/Code/c"
+							       "~/Code/zig"))
+      (emacs-sessionizer-mode)
 #+end_src
