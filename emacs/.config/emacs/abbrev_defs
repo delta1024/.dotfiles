@@ -1,0 +1,25 @@
+;;-*-coding: utf-8;-*-
+(define-abbrev-table 'global-abbrev-table
+  '(
+    ("teh" "the" nil :count 2)
+   ))
+
+(define-abbrev-table 'rust-mode-abbrev-table
+  '(
+    ("sefl" "self" nil :count 0)
+    ("sefl::" "Self::" nil :count 0)
+    ("treu" "true" nil :count 1)
+   ))
+
+(define-abbrev-table 'zig-mode-abbrev-table
+  '(
+    ("cnost" "const" nil :count 0)
+    ("cosnt" "const" nil :count 2)
+    ("fales" "false" nil :count 0)
+    ("hasdecl" "@hasDecl" nil :count 1)
+    ("retrun" "return" nil :count 0)
+    ("riturn" "return" nil :count 0)
+    ("sefl" "self" nil :count 24)
+    ("sfel" "self" nil :count 1)
+   ))
+

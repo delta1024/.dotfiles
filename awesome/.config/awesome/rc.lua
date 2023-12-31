@@ -21,7 +21,7 @@ local function get_theme ()
     if (now.hour >= 16 or now.hour <= 5) then
         return themes.stary_boy
     else
-        return themes.persona
+        return themes.forest_top
 end
 end
 local my_theme = get_theme()
@@ -611,6 +611,7 @@ local autorunApps =
 {
     "picom",
     "nm-applet",
+--    "redshift"
 }
 for _, app in ipairs(autorunApps) do
     awful.spawn.once(app)
